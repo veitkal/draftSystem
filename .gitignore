@@ -1,0 +1,101 @@
+#GITIGNORE c++/openFrameworks
+
+#keep data
+/bin/*
+!/bin/data/
+
+# IDE
+
+#QtCreator
+*.qbs
+*.user
+
+
+# XCode
+*.pbxuser
+*.perspective
+*.perspectivev3
+*.mode1v3
+*.mode2v3
+# XCode 4
+*.xccheckout
+xcuserdata/
+
+# Visual Studio
+*.sdf
+*.opensdf
+*.suo
+*.pdb
+*.ilk
+*.aps
+ipch/
+
+# Eclipse
+.metadata
+local.properties
+.externalToolBuilders
+
+# Android Studio
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+
+#OS
+# Linux
+*~
+# KDE
+.directory
+.AppleDouble
+
+# OSX
+.DS_Store
+*.swp
+*~.nib
+# Thumbnails
+._*
+
+# Windows
+# Image file caches
+Thumbs.db
+# Folder config file
+Desktop.ini
+
+# Android
+.csettings
+
+
+###########################################################
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
