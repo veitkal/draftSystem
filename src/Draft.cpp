@@ -39,6 +39,9 @@ void Draft::setup(int _numShafts, int _numWarps, float _orgX,
   drawDownX = orgX;
   drawDownY = orgY + boxPad+ tHeight;
 
+  bg = _bg;
+  fg = _fg;
+
   threading.resize(numShafts, vector<int>(numWarps));
   tieUp.resize(numShafts, vector<int>(numShafts));
   treadling.resize(numWeft);
@@ -67,7 +70,6 @@ void Draft::update(){
 void Draft::draw(){
 
   ofFill();
-
   ofSetColor(110,20,110);
   ofDrawRectangle(threadingX, threadingY, wWidth, tHeight);
 
@@ -160,11 +162,77 @@ void Draft::updateTreadling() {
 
 
 void Draft::drawThreading() {
+  //draw background of box
+  ofFill();
+  ofSetLineWidth(8);
+  ofSetColor(bg);
+  ofDrawRectangle(threadingX-2, threadingY-2, wWidth+4, tHeight+4);
+  //draw edge
+  ofNoFill();
+  ofSetLineWidth(2);
+  ofSetColor(fg);
+  ofDrawRectangle(threadingX, threadingY, wWidth, tHeight);
+
+  //draw cells
+  for(int i = 0; i  < threading.size(); i++) {
+      for(int j = 0; j < threading[i].size(); j++) {
+//        float x = orgX + wWidth - cellSize - (cellSize * j); //uncomment to draw from top left
+//        float y = orgY + tHeight - cellSize - (cellSize * i);//uncomment to draw from top left
+        float x = orgX + (cellSize * j);//uncomment to draw from bottom right
+        float y = orgY + (cellSize * i);//uncomment to draw from bottom right
+
+        ofFill();
+        ofColor c = threading[i][j]==1?fg:bg;
+        ofSetColor(c);
+
+        ofDrawRectangle(x, y, cellSize, cellSize);
+      }
+  }
+
+  //draw grid
+  for(int i = 0; i < threading.size(); i++) {
+      for(int j = 0; j < threading[i].size(); j++) {
+        ofSetColor(fg);
+        float x1 = orgX + (j * cellSize);
+        float y1 = orgY + (i * cellSize);
+
+        ofDrawLine(x1, orgY, x1, orgY+tWidth);
+        ofDrawLine(orgX, y1, orgX + wWidth, y1);
+      }
+  }
+
 }
 
 //--------------------------------------------------------------
 
 void Draft::drawTieUp() {
+  //draw background of box
+  ofFill();
+  ofSetLineWidth(8);
+  ofSetColor(bg);
+  ofDrawRectangle(tieUpX-2, tieUpY-2, tWidth+4, tHeight+4);
+  //draw edge
+  ofNoFill();
+  ofSetLineWidth(2);
+  ofSetColor(fg);
+  ofDrawRectangle(tieUpX, tieUpY, tWidth, tHeight);
+
+  //draw cells
+  for(int i = 0; i < tieUp.size(); i++) {
+      for(int j = 0; j < tieUp[0].size(); j++) {
+         float x = tieUpX + (i * cellSize);
+         float y = tieUpY + tWidth - cellSize - (j * cellSize);
+
+        ofFill();
+        ofColor c = tieUp[i][j]==1?fg:bg;
+        ofSetColor(c);
+
+        ofDrawRectangle(x, y, cellSize, cellSize);
+      }
+  }
+
+  //draw grid
+
 }
 
 //--------------------------------------------------------------

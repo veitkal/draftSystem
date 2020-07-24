@@ -33,6 +33,8 @@ public:
   //Corners of boxes from top right
   float threadingX, threadingY, treadlingX, treadlingY, tieUpX, tieUpY, drawDownX, drawDownY;
 
+  ofColor bg, fg;
+
   deque<vector<int>> threading;
   vector<vector<int>> tieUp;
   deque<int> treadling;
