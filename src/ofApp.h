@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
+#include "Draft.h"
+#include "ofApp.h"
 
 class ofApp : public ofBaseApp{
 
@@ -21,4 +23,12 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
+int numWarps, numShafts, numWeft, offsetX, offsetY;
+
+float orgX, orgY, width, height, wWidth, wHeight, tWidth, tHeight, cellSize, numBoxPad, cellPad;
+
+ofColor bg, fg;
+
+Draft draft;
 };
+

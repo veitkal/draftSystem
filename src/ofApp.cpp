@@ -2,16 +2,39 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+  //    ofBackground(0);h
+
+  bg = ofColor(255); //background colour draft
+  fg = ofColor(0); //foreground colour draft
+
+  numShafts = 5;
+  numWarps = 60; //number of warps
+  offsetX = 10; //offset where to begin drawing draft
+  offsetY = 10;
+  orgX = offsetX; //origin of draft ie translated 0
+  orgY = offsetY;
+  width = 800 - (offsetX * 2); //temporary size
+  height = 420 - (offsetY * 2);
+  numBoxPad = 1; //padding between drawnBoxes, calculated as a number of cells ie n*cellSize
+
+  cellSize = width / (numWarps+numShafts + numBoxPad); //size of cells in draft
+
+  draft.setup(numShafts, numWarps, orgX, orgY, width, height, numBoxPad, cellSize, bg, fg);
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+  draft.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+  ofSetColor(0);
+  ofFill();
+  ofDrawRectangle(0,0,800, 420);
+
+  draft.draw();
 
 }
 
