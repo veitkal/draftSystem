@@ -36,6 +36,10 @@ void ofApp::draw(){
 
   draft.draw();
 
+  ofSetColor(0);
+  ofDrawBitmapStringHighlight(ofToString((int) ofGetFrameRate()) + "fps", 20, 20);
+
+
 }
 
 //--------------------------------------------------------------
