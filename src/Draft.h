@@ -17,14 +17,16 @@ public:
   void setupTieUp();
   void setupTreadling();
   void setupDrawDown();
-  void calculateFullPatter();
+  void calculateFullPattern();
   vector<int> calcShed(int _treadle);
   void updateThreading();
   void updateTieUp();
   void updateTreadling();
+  void updateDrawDown();
   void drawThreading();
   void drawTieUp();
   void drawTreadling();
+  void drawDrawDown();
 
 
 

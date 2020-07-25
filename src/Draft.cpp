@@ -52,7 +52,7 @@ void Draft::setup(int _numShafts, int _numWarps, float _orgX,
   setupTreadling();
   setupDrawDown();
 
-  vector<int> testShed = calcShed(3);
+  vector<int> testShed = calcShed(0);
     cout << vectorToString(testShed) << endl;
 }
 
@@ -63,6 +63,7 @@ void Draft::update(){
     updateThreading();
     updateTieUp();
     updateTreadling();
+    updateDrawDown();
 
 
 }
@@ -87,6 +88,7 @@ void Draft::draw(){
   drawThreading();
   drawTieUp();
   drawTreadling();
+  drawDrawDown();
 
 }
 
@@ -123,8 +125,8 @@ void Draft::setupTieUp() {
     for(int i = 0; i < tieUp.size(); i++) {
       cout << vectorToString(tieUp[i]) << endl;
     }
-
 }
+
 
 //--------------------------------------------------------------
 
@@ -139,7 +141,13 @@ void Draft::setupTreadling() {
 //--------------------------------------------------------------
 
 void Draft::setupDrawDown() {
-
+    //looping over all the treadles and sets up a full pattern
+    int tempTreadle = 0;
+    for(int i = 0; i < drawDown.size(); i++) {
+        tempTreadle = treadling[i];
+        vector<int> testShed = calcShed(tempTreadle);
+        drawDown[i] = testShed;
+    }
 }
 
 //--------------------------------------------------------------
@@ -157,6 +165,21 @@ void Draft::updateTieUp() {
 //--------------------------------------------------------------
 
 void Draft::updateTreadling() {
+   float s = sin(ofGetElapsedTimef()*25);
+   int tempTreadle = ofClamp((int)ofMap(s, -1, 1, 0, numShafts), 0, numShafts);
+   cout << tempTreadle << endl;
+   treadling.push_front(tempTreadle);
+   treadling.pop_back();
+}
+
+//--------------------------------------------------------------
+
+void Draft::updateDrawDown() {
+    int tempVal = treadling[0];
+    vector<int> testShed = calcShed(tempVal);
+    drawDown.push_front(testShed);
+    drawDown.pop_back();
+
 }
 
 //--------------------------------------------------------------
@@ -184,7 +207,7 @@ void Draft::drawThreading() {
         float y = orgY + (cellSize * i);//uncomment to draw from bottom right
 
         //if current index is 1 colour is fg, else bg
-        ofColor c = threading[i][j]==1?fg:bg;
+        ofColor c = threading[i][j]>0?fg:bg;
         ofFill();
         ofSetColor(c);
 
@@ -230,7 +253,7 @@ void Draft::drawTieUp() {
 
         ofFill();
         //if current index is 1 colour is fg, else bg
-        ofColor c = tieUp[i][j]==1?fg:bg;
+        ofColor c = tieUp[i][j]>0?fg:bg;
         ofSetColor(c);
 
         ofDrawRectangle(x, y, cellSize, cellSize);
@@ -297,6 +320,50 @@ void Draft::drawTreadling() {
 
 //--------------------------------------------------------------
 
+void Draft::drawDrawDown() {
+  //draw background of box
+  ofFill();
+  ofSetLineWidth(8);
+  ofSetColor(bg);
+  ofDrawRectangle(drawDownX-2, drawDownY-2, wWidth+4, wHeight+4);
+  //draw edge
+  ofNoFill();
+  ofSetLineWidth(2);
+  ofSetColor(fg);
+  ofDrawRectangle(drawDownX, drawDownY, wWidth, wHeight);
+
+//draw treadling, looping over the deque + number of shafts as to calculate cells in grid
+  for(int i = 0; i < drawDown.size(); i++) {
+      for(int j = 0; j < drawDown[0].size(); j++) {
+         float x = drawDownX + (j * cellSize);
+         float y = drawDownY + (i * cellSize);
+
+        ofFill();
+        //if check if val at index (ie 0-numShafts-1) is the same as j, ie x index
+        //set colour to fg if so
+        ofColor c = drawDown[i][j] == 1?fg:bg;
+        ofSetColor(c);
+
+        ofDrawRectangle(x, y, cellSize, cellSize);
+      }
+
+  }
+
+  //draw grid
+  for(int i = 0; i < drawDown.size(); i++) {
+      for(int j = 0; j < drawDown[0].size(); j++) {
+        ofSetColor(fg);
+        float x1 = drawDownX + (j * cellSize);
+        float y1 = drawDownY + (i * cellSize);
+
+        ofDrawLine(x1,drawDownY, x1, drawDownY+wHeight);
+        ofDrawLine(drawDownX, y1, drawDownX + wWidth, y1);
+      }
+  }
+}
+
+//--------------------------------------------------------------
+
 vector<int> Draft::calcShed(int _treadle) {
   vector<int> tempVec;
   for(int i = 0; i < threading[0].size(); i++) {
@@ -310,10 +377,24 @@ vector<int> Draft::calcShed(int _treadle) {
     }
     tempVec.push_back(tempVal);
   }
-
   return tempVec;
-
-
 }
+//--------------------------------------------------------------
+
+//vector<int> Draft::calcShed(int _treadle) {
+//  vector<int> tempVec;
+//  for(int i = 0; i < threading[0].size(); i++) {
+//    int tempVal = 0;
+//    for(int j = 0; j < tieUp[0].size(); j++) {
+//        int tieUpVal = tieUp[_treadle][j];
+//        int threadingVal = threading[j][i];
+//        tempVal += tieUpVal * threadingVal;
+////        converting to binary 0/1
+//        tempVal = tempVal>0?1:0;
+//    }
+//    tempVec.push_back(tempVal);
+//  }
+//  return tempVec;
+//}
 
 //--------------------------------------------------------------
