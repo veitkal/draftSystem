@@ -17,6 +17,8 @@ public:
   void setupTieUp();
   void setupTreadling();
   void setupDrawDown();
+  void calculateFullPatter();
+  vector<int> calcShed(int _treadle);
   void updateThreading();
   void updateTieUp();
   void updateTreadling();
@@ -39,5 +41,6 @@ public:
   vector<vector<int>> tieUp;
   deque<int> treadling;
   deque<vector<int>> drawDown;
+  vector<int> shed;
 
 };
