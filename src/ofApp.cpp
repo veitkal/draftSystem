@@ -7,14 +7,14 @@ void ofApp::setup(){
   bg = ofColor(255); //background colour draft
   fg = ofColor(0); //foreground colour draft
 
-  numShafts = 5;
-  numWarps = 60; //number of warps
+  numShafts = 4;
+  numWarps = 30; //number of warps
   offsetX = 10; //offset where to begin drawing draft
   offsetY = 10;
   orgX = offsetX; //origin of draft ie translated 0
   orgY = offsetY;
   width = 800 - (offsetX * 2); //temporary size
-  height = 420 - (offsetY * 2);
+  height = 480 - (offsetY * 2);
   numBoxPad = 1; //padding between drawnBoxes, calculated as a number of cells ie n*cellSize
 
   cellSize = width / (numWarps+numShafts + numBoxPad); //size of cells in draft
@@ -32,7 +32,7 @@ void ofApp::update(){
 void ofApp::draw(){
   ofSetColor(0);
   ofFill();
-  ofDrawRectangle(0,0,800, 420);
+  ofDrawRectangle(0,0, width, 500);
 
   draft.draw();
 

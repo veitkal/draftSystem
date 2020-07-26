@@ -27,7 +27,7 @@ void Draft::setup(int _numShafts, int _numWarps, float _orgX,
 //  wHeight = height - (tHeight+boxPad); //height of draw down and treadling box
   numWeft = floor((height - (tHeight+boxPad))/cellSize);
   wHeight = numWeft*cellSize;
-  cout << numWeft << endl;
+  //cout << numWeft << endl;
 
   //Corners of boxes from top right
   threadingX = orgX;
@@ -50,10 +50,10 @@ void Draft::setup(int _numShafts, int _numWarps, float _orgX,
   setupThreading();
   setupTieUp();
   setupTreadling();
-  setupDrawDown();
+  //setupDrawDown();
 
   vector<int> testShed = calcShed(0);
-    cout << vectorToString(testShed) << endl;
+    //cout << vectorToString(testShed) << endl;
 }
 
 //--------------------------------------------------------------
@@ -104,7 +104,7 @@ void Draft::setupThreading() {
     }
 
     for(int i = 0; i < threading.size(); i++) {
-    cout << vectorToString(threading[i]) << endl;
+    //cout << vectorToString(threading[i]) << endl;
     }
 
 
@@ -123,7 +123,7 @@ void Draft::setupTieUp() {
     }
 
     for(int i = 0; i < tieUp.size(); i++) {
-      cout << vectorToString(tieUp[i]) << endl;
+      //cout << vectorToString(tieUp[i]) << endl;
     }
 }
 
@@ -166,8 +166,8 @@ void Draft::updateTieUp() {
 
 void Draft::updateTreadling() {
    float s = sin(ofGetElapsedTimef()*25);
-   int tempTreadle = ofClamp((int)ofMap(s, -1, 1, 0, numShafts), 0, numShafts);
-   cout << tempTreadle << endl;
+   int tempTreadle = ofClamp((int)ofMap(s, -1, 1, 0, numShafts), 0, numShafts-1);
+   //cout << tempTreadle << endl;
    treadling.push_front(tempTreadle);
    treadling.pop_back();
 }
