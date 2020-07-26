@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     //    ofBackground(0);
-    ofSetFrameRate(30);
+    ofSetFrameRate(60);
 
     bg = ofColor(255); //background colour draft
     fg = ofColor(0); //foreground colour draft
@@ -27,9 +27,9 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-//  if (ofGetFrameNum() % 30 == 0) {
+  if (ofGetFrameNum() % 30 == 0) {
     draft.update();
-//  }
+  }
 }
 
 //--------------------------------------------------------------
