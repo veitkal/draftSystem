@@ -39,6 +39,7 @@ void Draft::setup(int _numShafts, int _numWarps, float _orgX,
   drawDownX = orgX;
   drawDownY = orgY + boxPad+ tHeight;
 
+  noiseSeed1 = ofRandom(7777);
   t = 0;
 
   bg = _bg;
@@ -167,8 +168,12 @@ void Draft::updateTieUp() {
 //--------------------------------------------------------------
 
 void Draft::updateTreadling() {
-   float s = sin(t*5);
-   int tempTreadle = ofClamp((int)ofMap(s, -1, 1, 0, numShafts), 0, numShafts-1);
+   float n1 = ofMap(ofNoise(t * treadlingNoise1+noiseSeed1),0,1,-1,1);
+   float s1 = sin(t*treadlingSin1);
+   float s2 = sin(t*treadlingSin2);
+   float s = s1+s2+n1;
+   float maxVal = (float)numShafts;
+   int tempTreadle = ofClamp(ofMap(s, -1.0, 1.0, 0.0, maxVal), 0, numShafts-1);
    //cout << tempTreadle << endl;
    treadling.push_front(tempTreadle);
    treadling.pop_back();

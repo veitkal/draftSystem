@@ -4,12 +4,20 @@
 #include "Draft.h"
 #include "ofApp.h"
 
+//addons
+#include "ofxOsc.h"
+
+//OSC Port
+#define PORT 9000
+
 class ofApp : public ofBaseApp{
 
 public:
     void setup();
     void update();
     void draw();
+
+    void updateOSC();
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -30,5 +38,9 @@ float orgX, orgY, width, height, wWidth, wHeight, tWidth, tHeight, cellSize, num
 ofColor bg, fg;
 
 Draft draft;
+
+//OSC
+ofxOscReceiver oscR;
+
 };
 

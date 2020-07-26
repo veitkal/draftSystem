@@ -3,8 +3,12 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     //    ofBackground(0);
-    ofSetFrameRate(60);
+    ofSetFrameRate(30);
 
+    //OSC
+    oscR.setup(PORT);
+
+    //VARS
     bg = ofColor(255); //background colour draft
     fg = ofColor(0); //foreground colour draft
 
@@ -27,6 +31,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    updateOSC();
 //  if (ofGetFrameNum() % 30 == 0) {
     draft.update();
 //  }
@@ -45,6 +50,27 @@ void ofApp::draw(){
 
 
 }
+
+//--------------------------------------------------------------
+
+void ofApp::updateOSC(){
+    while (oscR.hasWaitingMessages()) {
+        ofxOscMessage m;
+        oscR.getNextMessage(&m);
+
+        if (m.getAddress() == "/treadleSin1") {
+            draft.treadlingSin1 = m.getArgAsFloat(0);
+        }
+        if (m.getAddress() == "/treadleSin2") {
+            draft.treadlingSin2 = m.getArgAsFloat(0);
+        }
+        if (m.getAddress() == "/treadleNoise1") {
+            draft.treadlingNoise1 = m.getArgAsFloat(0);
+        }
+    }
+
+}
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){

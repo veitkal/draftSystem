@@ -3,7 +3,7 @@
 
 //========================================================================
 int main( ){
-    ofSetupOpenGL(800,480,OF_FULLSCREEN);			// <-------- setup the GL context
+    ofSetupOpenGL(800,480,OF_WINDOW);			// <-------- setup the GL context
 
    // ofGLFWWindowSettings msettings;
    // msettings.setSize(800,420);

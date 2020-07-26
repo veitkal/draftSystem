@@ -35,7 +35,10 @@ public:
   float orgX, orgY, width, height, wWidth, wHeight, tWidth, tHeight, cellSize, boxPad, cellPad;
 
   //Corners of boxes from top right
-  float threadingX, threadingY, treadlingX, treadlingY, tieUpX, tieUpY, drawDownX, drawDownY, t;
+  float threadingX, threadingY, treadlingX, treadlingY, tieUpX, tieUpY, drawDownX, drawDownY, t, noiseSeed1;
+
+  //wave params
+  float treadlingSin1, treadlingSin2, treadlingNoise1;
 
   ofColor bg, fg;
 
