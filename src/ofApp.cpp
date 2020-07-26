@@ -2,37 +2,41 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-  //    ofBackground(0);h
+    //    ofBackground(0);
+    ofSetFrameRate(30);
 
-  bg = ofColor(255); //background colour draft
-  fg = ofColor(0); //foreground colour draft
+    bg = ofColor(255); //background colour draft
+    fg = ofColor(0); //foreground colour draft
 
-  numShafts = 4;
-  numWarps = 30; //number of warps
-  offsetX = 10; //offset where to begin drawing draft
-  offsetY = 10;
-  orgX = offsetX; //origin of draft ie translated 0
-  orgY = offsetY;
-  width = 800 - (offsetX * 2); //temporary size
-  height = 480 - (offsetY * 2);
-  numBoxPad = 1; //padding between drawnBoxes, calculated as a number of cells ie n*cellSize
+    numShafts = 4;
+    numWarps = 30; //number of warps
+    offsetX = 10; //offset where to begin drawing draft
+    offsetY = 10;
+    orgX = offsetX; //origin of draft ie translated 0
+    orgY = offsetY;
+    width = 800 - (offsetX * 2); //temporary size
+    height = 480 - (offsetY * 2);
+    numBoxPad = 1; //padding between drawnBoxes, calculated as a number of cells ie n*cellSize
+    updateRate = 30;
 
-  cellSize = width / (numWarps+numShafts + numBoxPad); //size of cells in draft
+        cellSize = width / (numWarps+numShafts + numBoxPad); //size of cells in draft
 
-  draft.setup(numShafts, numWarps, orgX, orgY, width, height, numBoxPad, cellSize, bg, fg);
+    draft.setup(numShafts, numWarps, orgX, orgY, width, height, numBoxPad, cellSize, bg, fg);
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-  draft.update();
+//  if (ofGetFrameNum() % 30 == 0) {
+    draft.update();
+//  }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
   ofSetColor(0);
   ofFill();
-  ofDrawRectangle(0,0, width, 500);
+  ofDrawRectangle(0,0, 800, 480);
 
   draft.draw();
 

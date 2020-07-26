@@ -23,7 +23,7 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
-int numWarps, numShafts, numWeft, offsetX, offsetY;
+int numWarps, numShafts, numWeft, offsetX, offsetY, updateRate;
 
 float orgX, orgY, width, height, wWidth, wHeight, tWidth, tHeight, cellSize, numBoxPad, cellPad;
 

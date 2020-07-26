@@ -39,6 +39,8 @@ void Draft::setup(int _numShafts, int _numWarps, float _orgX,
   drawDownX = orgX;
   drawDownY = orgY + boxPad+ tHeight;
 
+  t = 0;
+
   bg = _bg;
   fg = _fg;
 
@@ -65,7 +67,7 @@ void Draft::update(){
     updateTreadling();
     updateDrawDown();
 
-
+    t+=0.1;
 }
 
 //--------------------------------------------------------------
@@ -165,7 +167,7 @@ void Draft::updateTieUp() {
 //--------------------------------------------------------------
 
 void Draft::updateTreadling() {
-   float s = sin(ofGetElapsedTimef()*25);
+   float s = sin(t*5);
    int tempTreadle = ofClamp((int)ofMap(s, -1, 1, 0, numShafts), 0, numShafts-1);
    //cout << tempTreadle << endl;
    treadling.push_front(tempTreadle);
