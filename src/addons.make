@@ -4,3 +4,4 @@ ofxOpenCv
 ofxCv
 ofxPS3EyeGrabber
 ofxKinect
+ofxOsc
