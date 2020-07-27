@@ -1,0 +1,6 @@
+ofxThermalPrinter
+ofxGui
+ofxOpenCv
+ofxCv
+ofxPS3EyeGrabber
+ofxKinect
