@@ -39,8 +39,11 @@ void Draft::setup(int _numShafts, int _numWarps, float _orgX,
   drawDownX = orgX;
   drawDownY = orgY + boxPad+ tHeight;
 
-  noiseSeed1 = ofRandom(7777);
+  noiseSeed1 = ofRandom(7777); //treadling noise1
+  noiseSeed2 = ofRandom(7777); //treadling noise1
   t = 0;
+  updateWarp = true;
+  updateWeft = true;
 
   bg = _bg;
   fg = _fg;
@@ -49,6 +52,7 @@ void Draft::setup(int _numShafts, int _numWarps, float _orgX,
   tieUp.resize(numShafts, vector<int>(numShafts));
   treadling.resize(numWeft);
   drawDown.resize(numWeft, vector<int>(numWarps));
+  threadingSimple.resize(numWarps); //used to draw waveforms
 
   setupThreading();
   setupTieUp();
@@ -63,9 +67,9 @@ void Draft::setup(int _numShafts, int _numWarps, float _orgX,
 
 
 void Draft::update(){
-    updateThreading();
+    if (updateWarp) { updateThreading(); }
     updateTieUp();
-    updateTreadling();
+    if (updateWeft) { updateTreadling(); }
     updateDrawDown();
 
     t+=0.1;
@@ -158,6 +162,29 @@ void Draft::setupDrawDown() {
 
 
 void Draft::updateThreading() {
+   float n1 = ofMap(ofNoise(t * threadingNoise1+noiseSeed2),0,1,-1,1);
+   float s1 = sin(t*threadingSin1);
+   float s2 = sin(t*threadingSin2);
+   float s = s1+s2+n1;
+   float maxVal = (float)numShafts;
+   int tempVal = ofClamp(ofMap(s, -1.0, 1.0, 0.0, maxVal), 0, numShafts-1);
+   threadingSimple.push_back(tempVal);
+   threadingSimple.pop_front();
+
+
+
+
+    for(int i = 0; i < threading.size(); i++) {
+        for(int j = 0; j < threading[0].size(); j++) {
+            if(threadingSimple[j] == i) {
+                threading[i][j] = 1;
+            } else {
+                threading[i][j] = 0;
+            }
+
+        }
+    }
+
 }
 
 //--------------------------------------------------------------

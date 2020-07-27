@@ -35,10 +35,12 @@ public:
   float orgX, orgY, width, height, wWidth, wHeight, tWidth, tHeight, cellSize, boxPad, cellPad;
 
   //Corners of boxes from top right
-  float threadingX, threadingY, treadlingX, treadlingY, tieUpX, tieUpY, drawDownX, drawDownY, t, noiseSeed1;
+  float threadingX, threadingY, treadlingX, treadlingY, tieUpX, tieUpY, drawDownX, drawDownY, t, noiseSeed1, noiseSeed2;
 
+  //update params
+  bool updateWarp, updateWeft;
   //wave params
-  float treadlingSin1, treadlingSin2, treadlingNoise1;
+  float treadlingSin1, treadlingSin2, treadlingNoise1, threadingSin1, threadingSin2, threadingNoise1 ;
 
   ofColor bg, fg;
 
@@ -47,5 +49,6 @@ public:
   deque<int> treadling;
   deque<vector<int>> drawDown;
   vector<int> shed;
+  deque<int> threadingSimple; // a single deque used to draw waveforms in the threading
 
 };

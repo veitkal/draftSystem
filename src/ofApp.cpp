@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     //    ofBackground(0);
-    ofSetFrameRate(30);
+    ofSetFrameRate(60);
 
     //OSC
     oscR.setup(PORT);
@@ -32,9 +32,9 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     updateOSC();
-//  if (ofGetFrameNum() % 30 == 0) {
+  if (ofGetFrameNum() % 5 == 0) {
     draft.update();
-//  }
+  }
 }
 
 //--------------------------------------------------------------
@@ -58,6 +58,12 @@ void ofApp::updateOSC(){
         ofxOscMessage m;
         oscR.getNextMessage(&m);
 
+        if (m.getAddress() == "/updateWarp") {
+            draft.updateWarp = m.getArgAsBool(0);
+        }
+        if (m.getAddress() == "/updateWeft") {
+            draft.updateWeft = m.getArgAsBool(0);
+        }
         if (m.getAddress() == "/treadleSin1") {
             draft.treadlingSin1 = m.getArgAsFloat(0);
         }
@@ -66,6 +72,15 @@ void ofApp::updateOSC(){
         }
         if (m.getAddress() == "/treadleNoise1") {
             draft.treadlingNoise1 = m.getArgAsFloat(0);
+        }
+        if (m.getAddress() == "/threadingSin1") {
+            draft.threadingSin1 = m.getArgAsFloat(0);
+        }
+        if (m.getAddress() == "/threadingSin2") {
+            draft.threadingSin2 = m.getArgAsFloat(0);
+        }
+        if (m.getAddress() == "/threadingNoise1") {
+            draft.threadingNoise1 = m.getArgAsFloat(0);
         }
     }
 
