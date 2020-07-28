@@ -22,6 +22,7 @@ public:
   void updateThreading();
   void updateTieUp();
   void updateTreadling();
+void pushTreadling(int _tempTreadle);
   void updateDrawDown();
   void drawThreading();
   void drawTieUp();

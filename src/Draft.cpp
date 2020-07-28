@@ -206,7 +206,15 @@ void Draft::updateTreadling() {
    treadling.pop_back();
 }
 
-//--------------------------------------------------------------
+//----------------------
+
+void Draft::pushTreadling(int _tempTreadle) {
+
+    treadling.push_front(_tempTreadle);
+    treadling.pop_back();
+}
+
+//----------------------------------------
 
 void Draft::updateDrawDown() {
     int tempVal = treadling[0];

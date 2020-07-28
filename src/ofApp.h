@@ -1,11 +1,14 @@
 #pragma once
 
 #include "ofMain.h"
-#include "Draft.h"
 #include "ofApp.h"
+#include "Draft.h"
+#include "OpticalFlow.h"
 
 //addons
 #include "ofxOsc.h"
+#include "ofxOpenCv.h"
+#include "ofxCv.h"
 
 //OSC Port
 #define PORT 9000
@@ -38,6 +41,7 @@ float orgX, orgY, width, height, wWidth, wHeight, tWidth, tHeight, cellSize, num
 ofColor bg, fg;
 
 Draft draft;
+OpticalFlow optf;
 
 //OSC
 ofxOscReceiver oscR;

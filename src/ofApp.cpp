@@ -26,6 +26,7 @@ void ofApp::setup(){
         cellSize = width / (numWarps+numShafts + numBoxPad); //size of cells in draft
 
     draft.setup(numShafts, numWarps, orgX, orgY, width, height, numBoxPad, cellSize, bg, fg);
+    optf.setup();
 
 }
 
@@ -35,6 +36,9 @@ void ofApp::update(){
   if (ofGetFrameNum() % 5 == 0) {
     draft.update();
   }
+  optf.update(63., .05, -10., 2.0);
+  draft.pushTreadling(optf.getCursor());
+  cout << optf.getCursor() << endl;
 }
 
 //--------------------------------------------------------------
@@ -89,7 +93,10 @@ void ofApp::updateOSC(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if (key == '1') { draft.pushTreadling(0);}
+    if (key == '2') { draft.pushTreadling(1);}
+    if (key == '3') { draft.pushTreadling(2);}
+    if (key == '4') { draft.pushTreadling(3);}
 }
 
 //--------------------------------------------------------------
