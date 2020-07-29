@@ -40,7 +40,7 @@ void ofApp::update(){
   }
   tCV.update(63., .05, -10., 2.0);
   draft.pushTreadling(tCV.getCursor());
-  cout << tCV.getCursor() << endl;
+//  cout << tCV.getCursor() << endl;
 }
 
 //--------------------------------------------------------------

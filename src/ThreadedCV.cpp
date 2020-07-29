@@ -200,7 +200,7 @@ void ThreadedCV::update(float _multi, float _damp, float _yThresh, float _tracti
         currentColor.setFromPixels( pixels );
 
         //Decimate images to 25%, a lot less expensive and lets you keep higher resolution camera input. Ref: Theo Papatheodorou see readme
-        float decimate = 0.25;
+        float decimate = 0.1;
         ofxCvColorImage decimatedImage;
         decimatedImage.allocate( currentColor.width * decimate, currentColor.height * decimate );
         decimatedImage.scaleIntoMe( currentColor, CV_INTER_AREA );
