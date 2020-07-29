@@ -1,3 +1,4 @@
+
 /*
  * OPTICAL FLOW CLASS USING 'ofxCv'
  *
@@ -7,18 +8,26 @@
  *
  *
 */
+
 #include "ofMain.h"
-#include "OpticalFlow.h"
+#include "ThreadedCV.h"
 
 
-OpticalFlow::OpticalFlow()
+ThreadedCV::ThreadedCV()
 {
 
+    startThread();
 }
 
-void OpticalFlow::setup() {
+ThreadedCV::~ThreadedCV()
+{
+    waitForThread(true);
+}
 
-    //CAMERA
+void ThreadedCV::setup() {
+
+
+//    //CAMERA
     camera.setGrabber(std::make_shared<ofxPS3EyeGrabber>()); //COMMENT TO USE INTERNAL CAMERA
 //    vidGrabber.setDeviceID(1);                                 //UNCOMMENT TO USE INTERNAL CAMERA
 //    vidGrabber.setPixelFormat(OF_PIXELS_NATIVE);
@@ -35,22 +44,133 @@ void OpticalFlow::setup() {
     yReset - false; //trigger checking negative Y motion
     prev=vec2(ofGetWidth()/2,ofGetHeight()/2); //previous
 
-    ////GUI TO BE IMPLEMENTED///
+    multi = 64;
+    damp = 0.05;
+    yThresh = -10;
+    traction = 2.0;
+      currentColor.allocate(640, 480);
+      float decimate = 0.25;
+      decimatedImage.allocate( currentColor.width * decimate, currentColor.height * decimate );
 
-//    gui.setup();
-//    gui.add(fbPyrScale.set("fbPyrScale", .5, 0, .99));
-//    gui.add(fbLevels.set("fbLevels", 4, 1, 8));
-//    gui.add(fbIterations.set("fbIterations", 2, 1, 8));
-//    gui.add(fbPolyN.set("fbPolyN", 7, 5, 10));
-//    gui.add(fbPolySigma.set("fbPolySigma", 1.5, 1.1, 2));
-//    gui.add(fbUseGaussian.set("fbUseGaussian", false));
-//    gui.add(fbWinSize.set("winSize", 32, 4, 64));
+//    ////GUI TO BE IMPLEMENTED///
+
+//    //    gui.setup();
+//    //    gui.add(fbPyrScale.set("fbPyrScale", .5, 0, .99));
+//    //    gui.add(fbLevels.set("fbLevels", 4, 1, 8));
+//    //    gui.add(fbIterations.set("fbIterations", 2, 1, 8));
+//    //    gui.add(fbPolyN.set("fbPolyN", 7, 5, 10));
+//    //    gui.add(fbPolySigma.set("fbPolySigma", 1.5, 1.1, 2));
+//    //    gui.add(fbUseGaussian.set("fbUseGaussian", false));
+//    //    gui.add(fbWinSize.set("winSize", 32, 4, 64));
 
     curFlow = &fb;
 }
 
 
-void OpticalFlow::update(float _multi, float _damp, float _yThresh, float _traction) {
+void ThreadedCV::threadedFunction() {
+    camera.update();
+ofPixels pixels;
+  while(isThreadRunning()) {
+    if(camera.isFrameNew()) {
+
+//        lock();
+////      curFlow = &fb;
+//      //To IMPLEMENT GUI CONTROL///
+//      //            fb.setPyramidScale(fbPyrScale);
+//      //            fb.setNumLevels(fbLevels);
+//      //            fb.setWindowSize(fbWinSize);
+//      //            fb.setNumIterations(fbIterations);
+//      //            fb.setPolyN(fbPolyN);
+//      //            fb.setPolySigma(fbPolySigma);
+//      //            fb.setUseGaussian(fbUseGaussian);
+//      fb.setPyramidScale(.5);
+//      fb.setNumLevels(4);
+//      fb.setWindowSize(32);
+//      fb.setNumIterations(2);
+//      fb.setPolyN(7);
+//      fb.setPolySigma(1.5);
+//      fb.setUseGaussian(false);
+
+//      //Reading pixles and convert to ofxCVImage
+      pixels = camera.getPixels();
+      currentColor.setFromPixels( pixels );
+//camera.setUseTexture(false);
+
+      //Decimate images to 25%, a lot less expensive and lets you keep higher resolution camera input. Ref: Theo Papatheodorou see readme
+      decimatedImage.scaleIntoMe( currentColor, CV_INTER_AREA );
+//      decCamera = decimatedImage;
+
+//      // reference: Aaron Sherwood, see readme
+      curFlow->calcOpticalFlow(decimatedImage);
+      flow=fb.getAverageFlow() * multi; ///*~30?
+      flow=vec2(flow.x,flow.y) ;
+      dampenedflow+=(flow-dampenedflow)*damp; //~.05
+      prev+=dampenedflow;
+
+      vec2 midZone=vec2(ofGetWidth()/2,ofGetHeight()/2);
+      vec2 returnToMid = midZone-prev;
+      vec2 norm = glm::normalize(returnToMid);
+      float dist = glm::distance(prev, midZone);
+
+      prev.x = ofClamp(prev.x, -100, ofGetWidth()+100);
+
+
+      //slight controllable traction/current
+      if(dist > 3) {
+        prev+=norm*(traction);
+      }
+
+      //if to far beyond the limit, additional traction to smoothly take the "cursor" back
+      if(prev.x < -10 ) {
+        prev+=norm*traction; //~10
+      }
+      if(prev.x > ofGetWidth()+10) {
+        prev+=norm*traction; //~10
+      }
+
+      int x = ofClamp(prev.x, 0, ofGetWidth());
+
+      //a virtual cursor that gets positioned by the optical flow.x
+      if (x < ofGetWidth()*0.25) {
+        cursorX = 0;
+      } else if (x > ofGetWidth()*0.25 && x < ofGetWidth()*0.5) {
+        cursorX = 1;
+      } else if (x > ofGetWidth()*0.5 && x < ofGetWidth()*0.75) {
+        cursorX = 2;
+      } else if (x > ofGetWidth()*0.75) {
+        cursorX = 3;
+      }
+
+
+      //DETECT Y MOTION WITH SMALL LAG, ie counterY > lagNumber
+      if (dampenedflow.y < yThresh && counterY > 30) {   //~-20
+        yMotionNeg = !yMotionNeg;
+        yReset = !yReset;
+        counterY = 0; //RESETTING COUNTER ADDING LAG
+      }
+
+      //RESETS yReset TO USE AS TRIGGER
+      if(counterY > 31) {
+        yReset = 0;
+      }
+
+
+
+      //DETECT MOTION
+      if (dampenedflow.x < -5. || dampenedflow.x > 5.) {
+        motionDetected = true;
+      } else {
+        motionDetected = false;
+      }
+                cout << "motionDetected" << motionDetected << endl;
+//      unlock()*/;
+    }
+
+    counterY++;
+    }
+}
+
+void ThreadedCV::update(float _multi, float _damp, float _yThresh, float _traction) {
 
     camera.update();
 
@@ -152,10 +272,9 @@ void OpticalFlow::update(float _multi, float _damp, float _yThresh, float _tract
     }
 
     counterY++;
-
 }
 
-void OpticalFlow::draw() {
+void ThreadedCV::draw() {
 
     ofSetColor(255);
     ofPushMatrix();
@@ -206,22 +325,22 @@ void OpticalFlow::draw() {
 
 ///GETTER FUNCTIONS///
 /////////////////////j
-int OpticalFlow::getCursor() {
+int ThreadedCV::getCursor() {
     return cursorX;
 }
 
-glm::vec2 OpticalFlow::getDampenedFlow() {
+glm::vec2 ThreadedCV::getDampenedFlow() {
     return dampenedflow;
 }
 
-bool OpticalFlow::getYmotionNeg() {
+bool ThreadedCV::getYmotionNeg() {
     return yMotionNeg;
 }
 
-bool OpticalFlow::getYreset() {
+bool ThreadedCV::getYreset() {
     return yReset;
 }
 
-bool OpticalFlow::getMotionDetected() {
+bool ThreadedCV::getMotionDetected() {
     return motionDetected;
 }

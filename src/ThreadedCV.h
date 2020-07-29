@@ -1,3 +1,5 @@
+/* THREADED COMPUTER VISION CLASS USING OPTICAL FLOW */
+
 #pragma once
 #include "ofMain.h"
 #include "ofxOpenCv.h"
@@ -10,12 +12,14 @@ using namespace ofxCv;
 using namespace cv;
 using namespace glm;
 
-class OpticalFlow{
+class ThreadedCV: public ofThread  {
 
 public:
-    OpticalFlow();
+    ThreadedCV();
+    ~ThreadedCV();
 
     void setup();
+    void threadedFunction();
     void update(float _multi, float _damp, float _yThresh, float _traction);
     void draw();
 
@@ -43,7 +47,10 @@ public:
     vec2 flow;
     vec2 dampenedflow;
     vec2 prev;
+    ofxCvColorImage currentColor;
+    ofxCvColorImage decimatedImage;
 
     float cursorX, counterY;
     bool yMotionPos, yMotionNeg, motionDetected, yReset;
+    float multi, damp, yThresh, traction;
 };

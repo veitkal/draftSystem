@@ -3,7 +3,8 @@
 #include "ofMain.h"
 #include "ofApp.h"
 #include "Draft.h"
-#include "OpticalFlow.h"
+//#include "OpticalFlow.h"
+#include "ThreadedCV.h"
 
 //addons
 #include "ofxOsc.h"
@@ -41,7 +42,8 @@ float orgX, orgY, width, height, wWidth, wHeight, tWidth, tHeight, cellSize, num
 ofColor bg, fg;
 
 Draft draft;
-OpticalFlow optf;
+//OpticalFlow optf;
+ThreadedCV tCV;
 
 //OSC
 ofxOscReceiver oscR;

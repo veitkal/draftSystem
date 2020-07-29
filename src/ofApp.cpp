@@ -3,6 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     //    ofBackground(0);
+    ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetFrameRate(60);
 
     //OSC
@@ -26,7 +27,8 @@ void ofApp::setup(){
         cellSize = width / (numWarps+numShafts + numBoxPad); //size of cells in draft
 
     draft.setup(numShafts, numWarps, orgX, orgY, width, height, numBoxPad, cellSize, bg, fg);
-    optf.setup();
+//    optf.setup();
+    tCV.setup();
 
 }
 
@@ -36,9 +38,9 @@ void ofApp::update(){
   if (ofGetFrameNum() % 5 == 0) {
     draft.update();
   }
-  optf.update(63., .05, -10., 2.0);
-  draft.pushTreadling(optf.getCursor());
-  cout << optf.getCursor() << endl;
+//  optf.update(63., .05, -10., 2.0);
+//  draft.pushTreadling(optf.getCursor());
+//  cout << optf.getCursor() << endl;
 }
 
 //--------------------------------------------------------------
