@@ -38,9 +38,9 @@ void ofApp::update(){
   if (ofGetFrameNum() % 5 == 0) {
     draft.update();
   }
-//  optf.update(63., .05, -10., 2.0);
-//  draft.pushTreadling(optf.getCursor());
-//  cout << optf.getCursor() << endl;
+  tCV.update(63., .05, -10., 2.0);
+  draft.pushTreadling(tCV.getCursor());
+  cout << tCV.getCursor() << endl;
 }
 
 //--------------------------------------------------------------
