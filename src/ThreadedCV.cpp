@@ -41,7 +41,7 @@ void ThreadedCV::setup() {
     yMotionNeg = true; //toggle decided by negative movement in Y axis
     yMotionPos = true; //toggle decided by positiv movement in Y axis
     motionDetected = false; //checks for movement
-    yReset - false; //trigger checking negative Y motion
+    yReset = false; //trigger checking negative Y motion
     prev=vec2(ofGetWidth()/2,ofGetHeight()/2); //previous
 
     multi = 64;
