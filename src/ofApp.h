@@ -7,6 +7,7 @@
 #include "ThreadedCV.h"
 
 //addons
+#include "ofxThermalPrinter.h"
 #include "ofxOsc.h"
 #include "ofxOpenCv.h"
 #include "ofxCv.h"
@@ -21,7 +22,12 @@ public:
     void update();
     void draw();
 
+    void exit();
+
     void updateOSC();
+    void setupPrinter();
+    void printString(string inputString);
+    void printImg(ofImage inputImg);
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -35,18 +41,23 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
-int numWarps, numShafts, numWeft, offsetX, offsetY, updateRate;
+    //VARIABLES
+    int numWarps, numShafts, numWeft, offsetX, offsetY, updateRate;
+    float orgX, orgY, width, height, wWidth, wHeight, tWidth, tHeight, cellSize, numBoxPad, cellPad;
+    bool print;
 
-float orgX, orgY, width, height, wWidth, wHeight, tWidth, tHeight, cellSize, numBoxPad, cellPad;
+    //COLOURS
+    ofColor bg, fg;
 
-ofColor bg, fg;
+    //OBJECTS
+    Draft draft;
+    //OpticalFlow optf;
+    ThreadedCV tCV;
 
-Draft draft;
-//OpticalFlow optf;
-ThreadedCV tCV;
-
-//OSC
-ofxOscReceiver oscR;
+    //PRINTER
+    ofxThermalPrinter printer;
+    //OSC
+    ofxOscReceiver oscR;
 
 };
 

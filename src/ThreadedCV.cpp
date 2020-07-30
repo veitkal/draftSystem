@@ -162,7 +162,7 @@ ofPixels pixels;
       } else {
         motionDetected = false;
       }
-                cout << "motionDetected" << motionDetected << endl;
+//                cout << "motionDetected" << motionDetected << endl;
 //      unlock()*/;
     }
 

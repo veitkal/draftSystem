@@ -28,12 +28,15 @@ void pushTreadling(int _tempTreadle);
   void drawTieUp();
   void drawTreadling();
   void drawDrawDown();
+  void drawCurrentRow();
+  string getCurrentString();
+  ofImage getCurrentImg();
 
 
 
 
   int numWarps, numShafts, numWeft;
-  float orgX, orgY, width, height, wWidth, wHeight, tWidth, tHeight, cellSize, boxPad, cellPad;
+  float orgX, orgY, width, height, wWidth, wHeight, tWidth, tHeight, cellSize, boxPad, cellPad, printWidth, printSize;
 
   //Corners of boxes from top right
   float threadingX, threadingY, treadlingX, treadlingY, tieUpX, tieUpY, drawDownX, drawDownY, t, noiseSeed1, noiseSeed2;
@@ -51,5 +54,8 @@ void pushTreadling(int _tempTreadle);
   deque<vector<int>> drawDown;
   vector<int> shed;
   deque<int> threadingSimple; // a single deque used to draw waveforms in the threading
+
+  //fbo for thermal printing
+  ofFbo currentRowFbo;
 
 };

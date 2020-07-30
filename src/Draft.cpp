@@ -27,8 +27,9 @@ void Draft::setup(int _numShafts, int _numWarps, float _orgX,
 //  wHeight = height - (tHeight+boxPad); //height of draw down and treadling box
   numWeft = floor((height - (tHeight+boxPad))/cellSize);
   wHeight = numWeft*cellSize;
-  //cout << numWeft << endl;
 
+  printWidth = 380; //width of thremal printing area
+  printSize = printWidth/numWarps; //cell size for thermal printer
   //Corners of boxes from top right
   threadingX = orgX;
   threadingY = orgY;
@@ -59,8 +60,14 @@ void Draft::setup(int _numShafts, int _numWarps, float _orgX,
   setupTreadling();
   //setupDrawDown();
 
-  vector<int> testShed = calcShed(0);
+//  vector<int> testShed = calcShed(0);
     //cout << vectorToString(testShed) << endl;
+
+    //set up fbo
+    currentRowFbo.allocate(printWidth, printSize, GL_RGBA);
+    currentRowFbo.begin();
+    ofClear(bg);
+    currentRowFbo.end();
 }
 
 //--------------------------------------------------------------
@@ -96,6 +103,18 @@ void Draft::draw(){
   drawTieUp();
   drawTreadling();
   drawDrawDown();
+
+//DRAWING TO FBO FOR PRINTER IMAGE
+  currentRowFbo.begin();
+  ofClear(bg);
+  drawCurrentRow();
+//  ofDrawLine(0,0,380,0);
+//  ofDrawLine(380, 0, 370,10);
+  currentRowFbo.end();
+
+//  ofColor(255);
+//  currentRowFbo.draw(0,0);
+
 
 }
 
@@ -217,9 +236,11 @@ void Draft::pushTreadling(int _tempTreadle) {
 //----------------------------------------
 
 void Draft::updateDrawDown() {
+    //calculating current shed and updating drawDown
     int tempVal = treadling[0];
     vector<int> testShed = calcShed(tempVal);
-    drawDown.push_front(testShed);
+    shed = testShed;
+    drawDown.push_front(shed);
     drawDown.pop_back();
 
 }
@@ -405,7 +426,7 @@ void Draft::drawDrawDown() {
 }
 
 //--------------------------------------------------------------
-
+//calculates the current shed, ie pattern row at selected treadle
 vector<int> Draft::calcShed(int _treadle) {
   vector<int> tempVec;
   for(int i = 0; i < threading[0].size(); i++) {
@@ -422,21 +443,43 @@ vector<int> Draft::calcShed(int _treadle) {
   return tempVec;
 }
 //--------------------------------------------------------------
+void Draft::drawCurrentRow() {
+    int crX = 0; //current row x pos
+    int crY = 0; //curent row y pos
+    int crW = printWidth; //current row width
+    int crH = printSize; //current row height
+    ofSetColor(bg);
+    ofDrawRectangle(crX,crY,crW,crH);
 
-//vector<int> Draft::calcShed(int _treadle) {
-//  vector<int> tempVec;
-//  for(int i = 0; i < threading[0].size(); i++) {
-//    int tempVal = 0;
-//    for(int j = 0; j < tieUp[0].size(); j++) {
-//        int tieUpVal = tieUp[_treadle][j];
-//        int threadingVal = threading[j][i];
-//        tempVal += tieUpVal * threadingVal;
-////        converting to binary 0/1
-//        tempVal = tempVal>0?1:0;
-//    }
-//    tempVec.push_back(tempVal);
-//  }
-//  return tempVec;
-//}
+    for (int i = 0; i < numWarps; i++) {
+       ofSetColor(0);
+       float x = crX+(i*printSize);
+       float y = crY+printSize;
+//       ofDrawLine(x, crY, x, y);
+
+       //setting current colour of each cell
+       ofColor c = shed[i]>0?0:255;
+       ofSetColor(c);
+
+       ofDrawRectangle(x,crY, printSize, printSize);
+    }
+
+
+}
+//--------------------------------------------------------------
+//returns current shed, or calculated pattern row
+string Draft::getCurrentString() {
+    return vectorToString(shed);
+}
 
 //--------------------------------------------------------------
+ofImage Draft::getCurrentImg() {
+    ofPixels pixels;
+    pixels.allocate(ofGetWidth(), ofGetHeight(), 4);
+
+    currentRowFbo.readToPixels(pixels);
+    ofImage currentImage;
+    currentImage.setFromPixels(pixels);
+
+    return currentImage;
+}

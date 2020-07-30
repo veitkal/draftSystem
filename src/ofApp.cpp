@@ -13,8 +13,10 @@ void ofApp::setup(){
     bg = ofColor(255); //background colour draft
     fg = ofColor(0); //foreground colour draft
 
+    print = false;
+
     numShafts = 4;
-    numWarps = 30; //number of warps
+    numWarps = 29; //number of warps
     offsetX = 10; //offset where to begin drawing draft
     offsetY = 10;
     orgX = offsetX; //origin of draft ie translated 0
@@ -24,23 +26,37 @@ void ofApp::setup(){
     numBoxPad = 1; //padding between drawnBoxes, calculated as a number of cells ie n*cellSize
     updateRate = 30;
 
-        cellSize = width / (numWarps+numShafts + numBoxPad); //size of cells in draft
+    cellSize = width / (numWarps+numShafts + numBoxPad); //size of cells in draft
 
+    setupPrinter();
     draft.setup(numShafts, numWarps, orgX, orgY, width, height, numBoxPad, cellSize, bg, fg);
 //    optf.setup();
     tCV.setup();
 
 }
 
+// EXIT FUNCTION TO CLOSE DOWN PRINTER AND OPTIONALLY PRINT EMPTY LINE
+void ofApp::exit(){
+//    printer.println("\n"); //UNCOMMENT TO ADD EXTRA EMPTY SPACE WHEN EXIT
+    printer.close();
+}
+
 //--------------------------------------------------------------
 void ofApp::update(){
     updateOSC();
-  if (ofGetFrameNum() % 5 == 0) {
+  if (ofGetFrameNum() % 25 == 0) {
     draft.update();
+  if(print) {
+      printString(draft.getCurrentString());
+      ofColor(255);
+//      printImg(draft.getCurrentImg());
+
+  }
   }
   //tCV.update(63., .05, -10., 2.0);
   draft.pushTreadling(tCV.getCursor());
-//  cout << tCV.getCursor() << endl;
+//  cout << draft.getCurrentString() << endl;
+
 }
 
 //--------------------------------------------------------------
@@ -92,6 +108,30 @@ void ofApp::updateOSC(){
 
 }
 
+//--------------------------------------------------------------
+//set up thermal printer
+void ofApp::setupPrinter(){
+  //PRINTER SEETTINGS
+  printer.open("/dev/ttyUSB0");
+  printer.setReverse(false);
+  printer.setBold(true);
+  printer.setAlign(MIDDLE);
+  //    printer.setUnderline(true); // to use if prints are generated as texts
+  printer.setControlParameter(7,160,0);
+
+}
+//--------------------------------------------------------------
+//print line with thermal printer
+void ofApp::printString(string inputString){
+  printer.println(inputString);
+
+}
+//--------------------------------------------------------------
+//print image with thermalPrinter
+void ofApp::printImg(ofImage inputImg){
+  printer.print(inputImg);
+
+}
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -99,6 +139,11 @@ void ofApp::keyPressed(int key){
     if (key == '2') { draft.pushTreadling(1);}
     if (key == '3') { draft.pushTreadling(2);}
     if (key == '4') { draft.pushTreadling(3);}
+
+    //THERMAL PRINTER /////
+    if (key == 'p'){
+        print = !print;
+    }
 }
 
 //--------------------------------------------------------------
