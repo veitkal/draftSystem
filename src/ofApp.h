@@ -28,6 +28,7 @@ public:
     void setupPrinter();
     void printString(string inputString);
     void printImg(ofImage inputImg);
+    void printFullDraft();
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -44,10 +45,12 @@ public:
     //VARIABLES
     int numWarps, numShafts, numWeft, offsetX, offsetY, updateRate;
     float orgX, orgY, width, height, wWidth, wHeight, tWidth, tHeight, cellSize, numBoxPad, cellPad;
-    bool print;
+    bool print, runDraft;
 
     //COLOURS
     ofColor bg, fg;
+
+    ofFbo patternFbo;
 
     //OBJECTS
     Draft draft;

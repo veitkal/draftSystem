@@ -14,8 +14,9 @@ void ofApp::setup(){
     fg = ofColor(0); //foreground colour draft
 
     print = false;
+    runDraft = true;
 
-    numShafts = 4;
+    numShafts = 5;
     numWarps = 29; //number of warps
     offsetX = 10; //offset where to begin drawing draft
     offsetY = 10;
@@ -31,7 +32,13 @@ void ofApp::setup(){
     setupPrinter();
     draft.setup(numShafts, numWarps, orgX, orgY, width, height, numBoxPad, cellSize, bg, fg);
 //    optf.setup();
-    tCV.setup();
+    tCV.setup(numShafts);
+
+    //pattern fbo
+    patternFbo.allocate(800, 480);
+    patternFbo.begin();
+    ofClear(0);
+    patternFbo.end();
 
 }
 
@@ -44,17 +51,17 @@ void ofApp::exit(){
 //--------------------------------------------------------------
 void ofApp::update(){
     updateOSC();
-  if (ofGetFrameNum() % 25 == 0) {
+  if (runDraft && ofGetFrameNum() % 5 == 0) {
+    draft.pushTreadling(tCV.getCursor());
     draft.update();
   if(print) {
-      printString(draft.getCurrentString());
+//      printString(draft.getCurrentString());
       ofColor(255);
 //      printImg(draft.getCurrentImg());
-
+//      printFullDraft();
   }
   }
   //tCV.update(63., .05, -10., 2.0);
-  draft.pushTreadling(tCV.getCursor());
 //  cout << draft.getCurrentString() << endl;
 
 }
@@ -69,6 +76,8 @@ void ofApp::draw(){
 
   ofSetColor(0);
   ofDrawBitmapStringHighlight(ofToString((int) ofGetFrameRate()) + "fps"    , 20, 20);
+
+  draft.drawPattern(0,500, 800, 480);
 
 
 }
@@ -132,6 +141,16 @@ void ofApp::printImg(ofImage inputImg){
   printer.print(inputImg);
 
 }
+//--------------------------------------------------------------
+//print fullDraft with thermalPrinter
+void ofApp::printFullDraft(){
+  runDraft = false;  //pausing the update
+  draft.setupDrawDown(); //calculating the full pattern (ie with the same threading)
+  printImg(draft.draftToImg()); //printing full draft
+  print = false;  //stopping the printing
+
+  runDraft = true; //resuming the draft
+}
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -140,9 +159,15 @@ void ofApp::keyPressed(int key){
     if (key == '3') { draft.pushTreadling(2);}
     if (key == '4') { draft.pushTreadling(3);}
 
+    //runDrafts
+    if (key == 'r'){
+        runDraft = !runDraft;
+    }
+
     //THERMAL PRINTER /////
     if (key == 'p'){
-        print = !print;
+//        print = !print;
+        printFullDraft();
     }
 }
 

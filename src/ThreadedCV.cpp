@@ -24,7 +24,7 @@ ThreadedCV::~ThreadedCV()
     waitForThread(true);
 }
 
-void ThreadedCV::setup() {
+void ThreadedCV::setup(int _numShafts) {
 
 
 //    //CAMERA
@@ -64,6 +64,7 @@ void ThreadedCV::setup() {
 //    //    gui.add(fbWinSize.set("winSize", 32, 4, 64));
 
     curFlow = &fb;
+    numShafts = _numShafts;
 }
 
 
@@ -129,17 +130,27 @@ ofPixels pixels;
       }
 
       int x = ofClamp(prev.x, 0, ofGetWidth());
+      float cursorArea = ofGetWidth()/numShafts;
+
+      for (int i = 0; i < numShafts; i++) {
+          float cLoc = i * cursorArea;
+          if (x < cursorArea) {
+              cursorX = 0;
+          } else if (x > cLoc && x < cLoc + cursorArea) {
+              cursorX = i;
+          }
+      }
 
       //a virtual cursor that gets positioned by the optical flow.x
-      if (x < ofGetWidth()*0.25) {
-        cursorX = 0;
-      } else if (x > ofGetWidth()*0.25 && x < ofGetWidth()*0.5) {
-        cursorX = 1;
-      } else if (x > ofGetWidth()*0.5 && x < ofGetWidth()*0.75) {
-        cursorX = 2;
-      } else if (x > ofGetWidth()*0.75) {
-        cursorX = 3;
-      }
+//      if (x < ofGetWidth()*0.25) {
+//        cursorX = 0;
+//      } else if (x > ofGetWidth()*0.25 && x < ofGetWidth()*0.5) {
+//        cursorX = 1;
+//      } else if (x > ofGetWidth()*0.5 && x < ofGetWidth()*0.75) {
+//        cursorX = 2;
+//      } else if (x > ofGetWidth()*0.75) {
+//        cursorX = 3;
+//      }
 
 
       //DETECT Y MOTION WITH SMALL LAG, ie counterY > lagNumber

@@ -29,6 +29,8 @@ void pushTreadling(int _tempTreadle);
   void drawTreadling();
   void drawDrawDown();
   void drawCurrentRow();
+  void drawPattern(float _px, float _py, float _pw, float _ph);
+  ofImage draftToImg();
   string getCurrentString();
   ofImage getCurrentImg();
 

@@ -76,7 +76,7 @@ void Draft::setup(int _numShafts, int _numWarps, float _orgX,
 void Draft::update(){
     if (updateWarp) { updateThreading(); }
     updateTieUp();
-    if (updateWeft) { updateTreadling(); }
+//    if (updateWeft) { updateTreadling(); }
     updateDrawDown();
 
     t+=0.1;
@@ -463,8 +463,54 @@ void Draft::drawCurrentRow() {
 
        ofDrawRectangle(x,crY, printSize, printSize);
     }
+}
+//--------------------------------------------------------------
+void Draft::drawPattern(float _px, float _py, float _pw, float _ph) {
+    ofSetColor(bg);
+//    ofDrawRectangle(px, py, pw, ph);
 
+    float psz = _pw/numWarps;
 
+    for(int i = 0; i < drawDown.size(); i++) {
+      for(int j = 0; j < drawDown[0].size(); j++) {
+        float x = _px + (j * psz);
+        float y = _py + (i * psz);
+
+        ofFill();
+        //if check if val at index (ie 0-numShafts-1) is the same as j, ie x index
+        //set colour to fg if so
+        ofColor c = drawDown[i][j] == 1?fg:bg;
+        ofSetColor(c);
+
+        ofDrawRectangle(x, y, psz, psz);
+      }
+    }
+
+}
+
+//--------------------------------------------------------------
+//returns current shed, or calculated pattern row
+ofImage Draft::draftToImg() {
+    ofFbo tempFbo;
+    tempFbo.allocate(printWidth,height*0.50);
+    tempFbo.begin();
+    ofClear(255);
+    ofPushMatrix();
+    ofScale(0.48);
+    drawThreading();
+    drawTieUp();
+    drawTreadling();
+    drawDrawDown();
+    ofPopMatrix();
+    tempFbo.end();
+
+    ofPixels pixels;
+    pixels.allocate(ofGetWidth(), ofGetHeight(), 4);
+
+    tempFbo.readToPixels(pixels);
+    ofImage tempImg;
+    tempImg.setFromPixels(pixels);
+    return tempImg;
 }
 //--------------------------------------------------------------
 //returns current shed, or calculated pattern row
