@@ -18,7 +18,7 @@ public:
     ThreadedCV();
     ~ThreadedCV();
 
-    void setup(int _numShafts);
+    void setup(int _numShafts, int _numWarps);
     void threadedFunction();
     void update(float _multi, float _damp, float _yThresh, float _traction);
     void draw();
@@ -50,7 +50,7 @@ public:
     ofxCvColorImage currentColor;
     ofxCvColorImage decimatedImage;
 
-    int numShafts;
+    int numShafts, numWarps;
     float cursorX, counterY;
     bool yMotionPos, yMotionNeg, motionDetected, yReset;
     float multi, damp, yThresh, traction;

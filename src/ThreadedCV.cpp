@@ -24,7 +24,7 @@ ThreadedCV::~ThreadedCV()
     waitForThread(true);
 }
 
-void ThreadedCV::setup(int _numShafts) {
+void ThreadedCV::setup(int _numShafts, int _numWarps) {
 
 
 //    //CAMERA
