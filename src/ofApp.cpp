@@ -32,7 +32,7 @@ void ofApp::setup(){
     setupPrinter();
     draft.setup(numShafts, numWarps, orgX, orgY, width, height, numBoxPad, cellSize, bg, fg);
 //    optf.setup();
-    tCV.setup(numShafts);
+    tCV.setup(numShafts, numWarps);
 
     //pattern fbo
     patternFbo.allocate(800, 480);
@@ -78,6 +78,7 @@ void ofApp::draw(){
   ofDrawBitmapStringHighlight(ofToString((int) ofGetFrameRate()) + "fps"    , 20, 20);
 
   draft.drawPattern(0,500, 800, 480);
+//  draft.drawPattern(0,0, 1920, 1080);
 
 
 }
